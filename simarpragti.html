@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crispy Bite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffffff;
+            animation: fadeIn 1.5s;
+            margin: 0;
+            position: relative;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .navbar {
+            background-color: #e94141;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .navbar-title {
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .navbar a {
+            color: rgb(211, 149, 149);
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+        .navbar a:hover {
+            background-color: #e03e00;
+            border-radius: 5px;
+        }
+        .cart-icon, .login-btn {
+            font-size: 18px;
+            color: rgb(32, 28, 28);
+            cursor: pointer;
+        } 
+        .cart-container {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: white;
+            padding: 15px;
+            box-shadow: 0px 0px 10px gray;
+            border-radius: 10px;
+            width: 250px;
+            z-index: 100;
+        }
+        .login-modal, .overlay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px gray;
+            border-radius: 10px;
+            z-index: 200;
+        }
+        .login-modal input {
+            display: block;
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+        }
+        .login-modal button {
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .menu-item {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+            padding: 15px;
+            text-align: center;
+            width: 200px;
+        }
+        .menu-item img {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+        }
+        .menu-item button {
+            background-color:rgb(220, 84, 84);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .menu-item button:hover {
+            background-color:rgb(220, 75, 75);
+        }
+        .food-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+        }
+        .food-gallery img {
+            width: 250px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        .about {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        .about h2 {
+            color: #ff4500;
+        }
+        .about p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .contact {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        .contact h2 {
+            color:rgb(229, 72, 72);
+        }
+        .contact p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px;
+}
+
+.category-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px gray;
+  padding: 15px;
+  text-align: center;
+  width: 150px;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+  background-color: #ffe5e5;
+}
+
+.category-card img {
+  width: 80px;
+  height: 80px;
+}
+
+.category-card h4 {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #ff4500;
+}
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <button class="login-btn" onclick="showLoginForm()">Login</button>
+        <span class="navbar-title"> Crispy Bite </span>
+        <span class="cart-icon" onclick="toggleCart()">🛒 Cart</span>
+    </div>
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+    <div class="login-modal" id="loginModal">
+        <h2>Login</h2>
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <button onclick="closeModal()">Close</button>
+    </div>
+    <div class="cart-container" id="cart-container">
+        <h2>Cart</h2>
+        <ul id="cart-list"></ul>
+        <h3>Total Price: Rs<span id="total-price">0</span></h3>
+    </div>
+    <div class="container">
+        <h2>Your Online Food Store</h2>
+        <p><h2>what are you ordering today?</h2></p>
+
+       <div class="category-buttons">
+  <div class="category-card" onclick="showCategory('burger')">
+    <img src="C:\xampp\htdocs\mandeepweb\burger1.jfif" alt="Burger">
+    <h4>Chinese</h4>
+  </div>
+  <div class="category-card" onclick="showCategory('pizza')">
+    <img src="C:\xampp\htdocs\mandeepweb\pizza.jfif" alt="Pizza">
+    <h4>Italian</h4>
+  </div>
+  <div class="category-card" onclick="showCategory('fries')">
+    <img src="C:\xampp\htdocs\mandeepweb\dosa.jfif" alt="Fries">
+    <h4>Soutn Indian</h4>
+  </div>
+  <div class="category-card" onclick="showCategory('shake')">
+    <img src="C:\xampp\htdocs\mandeepweb\taco.jfif" alt="Shakes">
+    <h4>Continental</h4>
+  </div>
+  <div class="category-card" onclick="showCategory('drink')">
+    <img src="C:\xampp\htdocs\mandeepweb\shake2.jfif" alt="Drinks">
+    <h4>Shakes & Drinks</h4>
+  </div>
+</div>
+      
+          <div id="menu" class="menu">
+            <!-- Burgers -->
+            <div class="menu-item" data-category="burger">
+              <img src="C:\xampp\htdocs\mandeepweb\noodels.jfif" alt="Classic Burger" />
+              <h3>Noodels</h3>
+              <p>Rs.100</p>
+              <button onclick="addToCart('Noodels', 100)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="burger">
+              <img src="C:\xampp\htdocs\mandeepweb\burger1.jfif" alt="Cheese Burger" />
+              <h3>Cheese Burger</h3>
+              <p>Rs.70</p>
+              <button onclick="addToCart('Cheese Burger', 70)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="burger">
+              <img src="C:\xampp\htdocs\mandeepweb\manchurian.jfif" alt="Double Patty Burger" />
+              <h3>Manchurian</h3>
+              <p>Rs.180</p>
+              <button onclick="addToCart('Manchurian', 90)">Add to Cart</button>
+            </div>
+      
+            <!-- Pizza -->
+            <div class="menu-item" data-category="pizza">
+              <img src="C:\xampp\htdocs\mandeepweb\pizza.jfif" alt="Margherita Pizza" />
+              <h3>Margherita Pizza</h3>
+              <p>Rs.300</p>
+              <button onclick="addToCart('Margherita Pizza', 300)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="pizza">
+              <img src="C:\xampp\htdocs\mandeepweb\pizza1.jfif" alt="Pepperoni Pizza" />
+              <h3>Pepperoni Pizza</h3>
+              <p>Rs.350</p>
+              <button onclick="addToCart('Pepperoni Pizza', 350)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="pizza">
+              <img src="C:\xampp\htdocs\mandeepweb\pizza3.jfif" alt="Veggie Delight Pizza" />
+              <h3>Veggie Delight Pizza</h3>
+              <p>Rs.320</p>
+              <button onclick="addToCart('Veggie Delight Pizza', 320)">Add to Cart</button>
+            </div>
+      
+            <!-- Fries -->
+            <div class="menu-item" data-category="fries">
+              <img src="C:\xampp\htdocs\mandeepweb\dosa1.jfif" alt="Crispy Fries" />
+              <h3>Masala Dosa</h3>
+              <p>Rs.120</p>
+              <button onclick="addToCart('Masala Dosa', 120)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="fries">
+              <img src="C:\xampp\htdocs\mandeepweb\idli.jfif" alt="Cheese Fries" />
+              <h3>Idli Sambhar</h3>
+              <p>Rs.110</p>
+              <button onclick="addToCart('Idli Sambhar', 110)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="fries">
+              <img src="C:\xampp\htdocs\mandeepweb\upma.jfif" alt="Cheese Fries" />
+              <h3>Upma</h3>
+              <p>Rs.90</p>
+              <button onclick="addToCart('Upma', 90)">Add to Cart</button>
+            </div>
+      
+            <!-- Shakes -->
+            <div class="menu-item" data-category="shake">
+              <img src="C:\xampp\htdocs\mandeepweb\taco.jfif" alt="Vanilla Shake" />
+              <h3>Taco</h3>
+              <p>Rs.150</p>
+              <button onclick="addToCart('Taco', 150)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="shake">
+              <img src="C:\xampp\htdocs\mandeepweb\pasta.jfif" alt="Chocolate Shake" />
+              <h3>Pasta</h3>
+              <p>Rs.170</p>
+              <button onclick="addToCart('Pasta', 170)">Add to Cart</button>
+            </div>
+             <div class="menu-item" data-category="shake">
+              <img src="C:\xampp\htdocs\mandeepweb\grilled.jpg" alt="Chocolate Shake" />
+              <h3>Grilled Sandwich</h3>
+              <p>Rs.200</p>
+              <button onclick="addToCart('Grilled Sandwich', 200)">Add to Cart</button>
+            </div>
+            <!-- Drinks -->
+           <div class="menu-item" data-category="drink">
+              <img src="C:\xampp\htdocs\mandeepweb\shake1.jfif" alt="Vanilla Shake" />
+              <h3>Vanilla Shake</h3>
+              <p>Rs.150</p>
+              <button onclick="addToCart('Vanilla Shake', 150)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="drink">
+              <img src="C:\xampp\htdocs\mandeepweb\shake2.jfif" alt="Chocolate Shake" />
+              <h3>Chocolate Shake</h3>
+              <p>Rs.170</p>
+              <button onclick="addToCart('Chocolate Shake', 170)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="drink">
+              <img src="C:\xampp\htdocs\mandeepweb\drink1.jfif" alt="Cold Drink" />
+              <h3>Cold Drink</h3>
+              <p>Rs.100</p>
+              <button onclick="addToCart('Cold Drink', 100)">Add to Cart</button>
+            </div>
+            <div class="menu-item" data-category="drink">
+              <img src="C:\xampp\htdocs\mandeepweb\lemonade.jfif" alt="Lemonade" />
+              <h3>Lemonade</h3>
+              <p>Rs.80</p>
+              <button onclick="addToCart('Lemonade', 80)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="food-gallery">
+            <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVsaWNpb3VzJTIwZm9vZHxlbnwwfHwwfHx8MA%3D%3D" alt="Delicious Food">
+            <img src="https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZGVsaWNpb3VzJTIwZm9vZHxlbnwwfHwwfHx8MA%3D%3D" alt="Tasty Dish">
+            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGRlbGljaW91cyUyMGZvb2R8ZW58MHx8MHx8fDA%3D" alt="Savory Meal">
+        </div>
+    </div>
+    <div id="about" class="about">
+        <h2>About Us</h2>
+        <p>Welcome to Crispy Bite, your ultimate destination for delicious fast food. We are committed to providing the best quality food that is prepared with fresh ingredients and utmost care. Our journey started with a passion for bringing people together through mouth-watering flavors.</p>
+        <p>At Crispy Bite, we offer a diverse menu, ranging from juicy burgers and cheesy pizzas to crispy fries and refreshing shakes. We believe in delivering not just food, but an experience that delights your taste buds and keeps you coming back for more.</p>
+        <p>Our team consists of skilled chefs who meticulously craft each meal to perfection. We maintain high hygiene standards and ensure every dish meets our quality benchmarks. Whether you’re craving a quick snack or a full meal, we have something special for you.</p>
+        <p>Customer satisfaction is our top priority. We value your feedback and strive to improve every day. Thank you for choosing Crispy Bite – where every bite is crispy, delicious, and unforgettable!</p>
+    </div>
+    <div class="contact" id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: contact@crispybite.com</p>
+        <p>Phone: +123-456-7890</p>
+        <p>Address: 123 Fast Food Lane, Food City</p>
+    </div>
+    <div id="cart-container" class="cart-container">
+        <h2>Cart</h2>
+        <ul id="cart-list"></ul>
+        <h3>Total Price: Rs<span id="total-price">0</span></h3>
+    </div>
+    
+    <script>
+        let cart = [];
+        function addToCart(item, price) {
+            cart.push({ item, price });
+            updateCart();
+        }
+        function updateCart() {
+            const cartList = document.getElementById('cart-list');
+            const totalPriceElement = document.getElementById('total-price');
+            cartList.innerHTML = '';
+            let totalPrice = 0;
+            cart.forEach(entry => {
+                let li = document.createElement('li');
+                li.textContent = `${entry.item} - Rs${entry.price}`;
+                cartList.appendChild(li);
+                totalPrice += entry.price;
+            });
+            totalPriceElement.textContent = totalPrice;
+        }
+        function toggleCart() {
+            const cartContainer = document.getElementById('cart-container');
+            cartContainer.style.display = (cartContainer.style.display === 'none' || cartContainer.style.display === '') ? 'block' : 'none';
+        }
+        function showLoginForm() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+        function closeModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+        function login() {
+            alert("Login successful!");
+            closeModal();
+        }
+        function showCategory(category) {
+           const items = document.querySelectorAll('.menu-item');
+              items.forEach(item => {
+        if (item.dataset.category === category) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+             });
+              }
+        window.onload = () => {
+                showCategory('burger');
+                         };
+    </script>
+</body>
+</html>
